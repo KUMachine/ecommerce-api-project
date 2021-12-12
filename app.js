@@ -1,9 +1,14 @@
 import express from "express";
 import userRouter from "./src/routes/user.routes.js";
+import authRouter from "./src/routes/auth.routes.js";
 import mongoose from "mongoose";
+import dotenv from "dotenv";
 
 async function main() {
-  await mongoose.connect("mongodb://localhost:27017/commerce_database");
+  // setup .env variables
+  dotenv.config("dotenv");
+
+  await mongoose.connect(process.env.MONGO_URL);
   const app = express();
 
   // parse the body
@@ -12,9 +17,10 @@ async function main() {
 
   // setup routes
   app.use(userRouter);
+  app.use(authRouter);
 
-  app.listen(5000, () => {
-    console.log("listening on http://localhost:5000");
+  app.listen(process.env.PORT, () => {
+    console.log("listening on http://localhost:" + process.env.PORT);
   });
 }
 
