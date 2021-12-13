@@ -5,6 +5,7 @@ import productRouter from "./src/routes/product.routes.js";
 import categoryRouter from "./src/routes/category.routes.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import cors from "cors";
 
 async function main() {
   // setup .env variables
@@ -12,6 +13,9 @@ async function main() {
 
   await mongoose.connect(process.env.MONGO_URL);
   const app = express();
+
+  //use cors
+  app.use(cors());
 
   // parse the body
   app.use(express.json());
