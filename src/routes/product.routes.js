@@ -20,8 +20,22 @@ productRouter.post("/products", isAdmin, async (req, res) => {
 
 // get all products
 productRouter.get("/products", async (req, res) => {
-  const products = await Product.find();
-  res.json(products);
+  try {
+    if (req.query.category) {
+      // if category is specified in the query, then get all products of that category
+      const products = await Product.find({ category: req.query.category });
+      return res.json(products);
+    } else {
+      // if no query is specified, then get all products
+      const products = await Product.find();
+      return res.json(products);
+    }
+  } catch (error) {
+    winston.error(`while fetching products: ${error}`);
+    return res.status(500).json({
+      error: "fetching products failed!",
+    });
+  }
 });
 
 // get product by id
